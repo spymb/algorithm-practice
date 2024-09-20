@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      class Stack {
+        #items = [];
+
+        push(item) {
+          this.#items.push(item);
+        }
+
+        pop() {
+          return this.#items.pop();
+        }
+
+        peek() {
+          return this.#items.at(-1);
+        }
+
+        size() {
+          return this.#items.length;
+        }
+
+        isEmpty() {
+          return this.size() === 0;
+        }
+
+        clear() {
+          this.#items = [];
+        }
+      }
+
+      // decNum 代表十进制数，base 代表要转换的进制
+      function convert(decNum, base) {
+        const stack = new Stack();
+        let num = decNum;
+        let str = "";
+        const baseStr = "0123456789ABCDEF";
+
+        while (num > 0) {
+          stack.push(num % base);
+          num = Math.floor(num / base);
+        }
+
+        while (!stack.isEmpty()) {
+          str += baseStr[stack.pop()];
+        }
+
+        return str;
+      }
+    </script>
+  </body>
+</html>
