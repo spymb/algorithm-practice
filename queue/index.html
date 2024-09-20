@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      class Queue {
+        #obj = {};
+        #count = 0;
+        #headIndex = 0;
+
+        enqueue(item) {
+          this.#obj[this.#count] = item;
+          this.#count++;
+        }
+
+        dequeue() {
+          if (this.size() === 0) return;
+          const item = this.#obj[this.#headIndex];
+          delete this.#obj[this.#headIndex];
+          this.#headIndex++;
+          return item;
+        }
+
+        front() {
+          return this.#obj[this.#headIndex];
+        }
+
+        size() {
+          return this.#count - this.#headIndex;
+        }
+
+        isEmpty() {
+          return this.size() === 0;
+        }
+
+        clear() {
+          this.#obj = {};
+          this.#count = 0;
+          this.#headIndex = 0;
+        }
+      }
+
+      function game(list, num) {
+        const q = new Queue();
+
+        list.forEach((item) => q.enqueue(item));
+
+        while (q.size() > 1) {
+          for (let i = 0; i < num; i++) {
+            q.enqueue(q.dequeue());
+          }
+
+          console.log(`${q.dequeue()}被淘汰了`);
+        }
+
+        
+        console.log(`${q.dequeue()}胜出`);
+        // return q.dequeue();
+      }
+    </script>
+  </body>
+</html>
