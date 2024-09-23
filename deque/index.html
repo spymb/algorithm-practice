@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      class Deque {
+        #obj = {};
+        #count = 0;
+        #headIndex = 0;
+
+        addBack(item) {
+          this.#obj[this.#count] = item;
+          this.#count++;
+        }
+
+        removeFront() {
+          if (this.isEmpty()) return;
+          const item = this.#obj[this.#headIndex];
+          delete this.#obj[this.#headIndex];
+          this.#headIndex++;
+          return item;
+        }
+
+        addFront(item) {
+          if (this.isEmpty()) {
+            this.addBack(item);
+          } else {
+            if (this.#headIndex > 0) {
+              this.#headIndex--;
+              this.#obj[this.#headIndex] = item;
+            } else {
+              for (let i = this.#count; i > 0; i--) {
+                this.#obj[i] = this.#obj[i - 1];
+              }
+
+              this.#obj[0] = item;
+              this.#count++;
+            }
+          }
+        }
+
+        removeBack() {
+          if (this.isEmpty()) return;
+          this.#count--;
+          const item = this.#obj[this.#count];
+          delete this.#obj[this.#count];
+          return item;
+        }
+
+        front() {
+          return this.#obj[this.#headIndex];
+        }
+
+        back() {
+          return this.#obj[this.#count - 1];
+        }
+
+        size() {
+          return this.#count - this.#headIndex;
+        }
+
+        isEmpty() {
+          return this.size() === 0;
+        }
+
+        clear() {
+          this.#obj = {};
+          this.#count = 0;
+          this.#headIndex = 0;
+        }
+      }
+
+      function testPalindromic(str) {
+        const lowStr = str.toLocaleLowerCase().split("").join("");
+
+        const dq = new Deque();
+
+        for (let i = 0; i < lowStr.length; i++) {
+          dq.addBack(lowStr[i]);
+        }
+
+        let isPalindromic = true;
+        while (dq.size() > 1) {
+          if (dq.removeBack() !== dq.removeFront()) {
+            isPalindromic = false;
+            break;
+          }
+        }
+
+        return isPalindromic;
+      }
+    </script>
+  </body>
+</html>

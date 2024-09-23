@@ -19,7 +19,7 @@
         }
 
         dequeue() {
-          if (this.size() === 0) return;
+          if (this.isEmpty()) return;
           const item = this.#obj[this.#headIndex];
           delete this.#obj[this.#headIndex];
           this.#headIndex++;
