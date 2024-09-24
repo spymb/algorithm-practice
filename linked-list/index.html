@@ -170,10 +170,10 @@
 
         removeAt(index) {
           if (index >= 0 && index < count) {
-            let current
+            let current;
 
             if (index === 0) {
-                current = this.head
+              current = this.head;
               if (this.count === 1) {
                 this.head = null;
                 this.tail = null;
@@ -182,19 +182,91 @@
                 this.head.pre = null;
               }
             } else if (index === this.count - 1) {
-                current = this.tail
-                this.tail = this.tail.pre
-                this.tail.next = null
+              current = this.tail;
+              this.tail = this.tail.pre;
+              this.tail.next = null;
             } else {
-                current = this.getNodeAt(index)
-                const previous = current.pre
+              current = this.getNodeAt(index);
+              const previous = current.pre;
 
-                previous.next = current.next
-                current.next.pre = previous
+              previous.next = current.next;
+              current.next.pre = previous;
             }
 
-            this.count--
-            return current.element
+            this.count--;
+            return current.element;
+          }
+        }
+      }
+    </script>
+
+    <script>
+      class CircularLinkedList extends LinkedList {
+        constructor() {
+          super();
+        }
+
+        push(element) {
+          const node = new Node(element);
+
+          if (this.head === null) {
+            this.head = node;
+          } else {
+            const tail = this.getNodeAt(this.count - 1);
+            tail.next = node;
+          }
+
+          node.next = this.head;
+          this.count++;
+        }
+
+        insert(element, index) {
+          if (index >= 0 && index <= this.count) {
+            const node = new Node(element);
+
+            if (index === 0) {
+              if (this.head === null) {
+                this.head = node;
+                node.next = this.head;
+              } else {
+                const tail = this.getNodeAt(this.count - 1);
+                node.next = this.head;
+                this.head = node;
+                tail.next = this.head;
+              }
+            } else {
+              const previous = this.getNodeAt(index - 1);
+              node.next = previous.next;
+              previous.next = node;
+            }
+
+            this.count++;
+          }
+        }
+
+        removeAt(index) {
+          if (index >= 0 && index < this.count) {
+            let current
+
+            if (index === 0) {
+              current = this.head;
+
+              if (this.count === 1) {
+                this.head = null;
+              } else {
+                const tail = this.getNodeAt(this.count - 1);
+                this.head = this.head.next;
+                tail.next = this.head;
+              }
+            } else {
+              const previous = this.getNodeAt(index - 1);
+              current = previous.next;
+
+              previous.next = current.next;
+            }
+
+            this.count--;
+            return current.element;
           }
         }
       }
