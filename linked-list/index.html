@@ -109,5 +109,95 @@
         }
       }
     </script>
+
+    <script>
+      class DoubleNode extends Node {
+        constructor(element) {
+          super(element);
+          this.pre = null;
+        }
+      }
+
+      class DoubleLinkedList extends LinkedList {
+        constructor() {
+          super();
+          this.tail = null;
+        }
+
+        push(element) {
+          const node = new DoubleNode(element);
+
+          if (this.head === null) {
+            this.head = node;
+            this.tail = node;
+          } else {
+            this.tail.next = node;
+            node.pre = this.tail;
+            this.tail = node;
+          }
+
+          this.count++;
+        }
+
+        insert(element, index) {
+          if (index >= 0 && index <= this.count) {
+            if (index === 0) {
+              if (this.head === null) {
+                this.head = node;
+                this.tail = node;
+              } else {
+                node.next = this.head;
+                this.head.pre = node;
+                this.head = node;
+              }
+            } else if (index === this.count) {
+              this.tail.next = node;
+              node.pre = this.tail;
+              this.tail = node;
+            } else {
+              const current = this.getNodeAt(index);
+              const previous = current.pre;
+
+              node.next = current;
+              current.pre = node;
+              previous.next = node;
+              node.pre = previous;
+            }
+
+            this.count++;
+          }
+        }
+
+        removeAt(index) {
+          if (index >= 0 && index < count) {
+            let current
+
+            if (index === 0) {
+                current = this.head
+              if (this.count === 1) {
+                this.head = null;
+                this.tail = null;
+              } else {
+                this.head = this.head.next;
+                this.head.pre = null;
+              }
+            } else if (index === this.count - 1) {
+                current = this.tail
+                this.tail = this.tail.pre
+                this.tail.next = null
+            } else {
+                current = this.getNodeAt(index)
+                const previous = current.pre
+
+                previous.next = current.next
+                current.next.pre = previous
+            }
+
+            this.count--
+            return current.element
+          }
+        }
+      }
+    </script>
   </body>
 </html>
