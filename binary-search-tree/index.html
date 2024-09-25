@@ -44,7 +44,7 @@
         }
 
         insertNode(node, key) {
-          if (compare(key, node.key) === Compare.less) {
+          if (this.compare(key, node.key) === Compare.less) {
             if (node.left === null) {
               node.left = new Node(key);
             } else {
@@ -135,7 +135,7 @@
             return false;
           }
 
-          const compareRes = compare(key, node.key);
+          const compareRes = this.compare(key, node.key);
 
           if (compareRes === Compare.less) {
             return this.searchNode(node.left, key);
@@ -155,7 +155,7 @@
             return null;
           }
 
-          const compareRes = compare(key, node.key);
+          const compareRes = this.compare(key, node.key);
 
           if (compareRes === Compare.less) {
             node.left = this.removeNode(node.left, key);
@@ -179,6 +179,128 @@
               node.right = this.removeNode(node.right, target.key);
               return node;
             }
+          }
+        }
+      }
+    </script>
+
+    <script>
+      // 二叉堆
+
+      // 最小堆
+      class MinHeap {
+        heap = [];
+
+        getLeftIndex(index) {
+          return 2 * index + 1;
+        }
+
+        getRightIndex(index) {
+          return 2 * index + 2;
+        }
+
+        getParentIndex(index) {
+          return Math.floor((index - 1) / 2);
+        }
+
+        insert(value) {
+          if (value === null) return;
+
+          this.heap.push(value);
+          this.shiftUp(this.heap.length - 1);
+        }
+
+        shiftUp(index) {
+          let parentIndex = this.getParentIndex(index);
+
+          const compareRes = this.compare(
+            this.heap[parentIndex],
+            this.heap(index)
+          );
+
+          while (index > 0 && compareRes === Compare.bigger) {
+            this.swap(this.heap, parentIndex, index);
+            index = parentIndex;
+            parentIndex = this.getParentIndex(index);
+          }
+        }
+
+        compare(a, b) {
+          if (a === b) {
+            return Compare.equal;
+          } else {
+            return a > b ? Compare.bigger : Compare.less;
+          }
+        }
+
+        swap(arr, a, b) {
+          const temp = arr[a];
+          arr[a] = arr[b];
+          arr[b] = temp;
+        }
+
+        // 移除堆顶
+        extract() {
+          if (this.isEmpty()) return;
+
+          const removed = this.heap[0];
+
+          if (this.size() > 1) {
+            this.heap[0] = this.heap.pop();
+            this.shiftDown(0);
+          }
+
+          return removed;
+        }
+
+        shiftDown(index) {
+          let currentIndex = index;
+          const leftIndex = this.getLeftIndex(index);
+          const rightIndex = this.getRightIndex(index);
+          const size = this.size();
+
+          if (leftIndex >= size || rightIndex >= size) return;
+
+          if (
+            this.compare(this.heap[currentIndex], this.heap[leftIndex]) ===
+            Compare.bigger
+          ) {
+            currentIndex = leftIndex;
+          }
+
+          if (
+            this.compare(this.heap[currentIndex], this.heap[rightIndex]) ===
+            Compare.bigger
+          ) {
+            currentIndex = rightIndex;
+          }
+
+          if (index !== currentIndex) {
+            this.swap(this.heap, index, currentIndex);
+            this.shiftDown(currentIndex);
+          }
+        }
+
+        size() {
+          return this.heap.length;
+        }
+
+        isEmpty() {
+          return this.size() === 0;
+        }
+      }
+
+      // 最大堆
+      class MaxHeap {
+        constructor() {
+          super();
+        }
+
+        compare(a, b) {
+          if (a === b) {
+            return Compare.equal;
+          } else {
+            return a < b ? Compare.bigger : Compare.less;
           }
         }
       }
