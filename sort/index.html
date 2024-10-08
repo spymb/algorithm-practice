@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function swap(arr, indexA, indexB) {
+        const temp = arr[indexA];
+        arr[indexA] = arr[indexB];
+        arr[indexB] = temp;
+      }
+
+      // 冒泡排序
+      // 每轮前后两两对比，交换位置
+      // 最先确定的是大值
+      function bubbleSwap(arr) {
+        const { length } = arr;
+
+        for (let i = 0; i < length; i++) {
+          // -1 是为了 j 和 j+1
+          // -i 是 i 轮后较大值已经排在后面，无需再对比
+          for (let j = 0; j < length - 1 - i; j++) {
+            if (arr[j] > arr[j + 1]) {
+              swap(arr, j, j + 1);
+            }
+          }
+        }
+
+        return arr;
+      }
+
+      // 选择排序
+      // 每轮找到当前最小值标记其索引，后续找到更小值时再变更索引，每轮查找结束后将每轮最小值放在前面
+      // 最开始找到的就是最小值，后面每轮找到更小的值
+      function selectionSort(arr) {
+        const { length } = arr;
+
+        let indexMin;
+        // 只需 length-1 轮
+        for (let i = 0; i < length - 1; i++) {
+          indexMin = i;
+          // j 从 i 开始
+          for (let j = i; j < length; j++) {
+            if (arr[indexMin] > arr[j]) {
+              indexMin = j;
+            }
+          }
+
+          if (i !== indexMin) {
+            swap(arr, i, indexMin);
+          }
+        }
+
+        return arr;
+      }
+
+      // 插入排序
+      // 每轮当前值都会与之前的值做对比，并按顺序排在合适的位置
+      // 每轮找到的是当前轮最小值，还要和之前轮的最小值做对比
+      function insertSort(arr) {
+        const { length } = arr;
+        let temp;
+
+        for (let i = 1; i < length; i++) {
+          temp = arr[i];
+          let j = i;
+
+          while (j > 0 && arr[j - 1] > temp) {
+            arr[j] = arr[j - 1];
+            j--;
+          }
+
+          arr[j] = temp;
+        }
+
+        return arr;
+      }
+
+      // 归并排序
+      function mergeSort(arr) {
+        const { length } = arr;
+
+        if (length) {
+          const middleIndex = Math.floor(length / 2);
+          const leftArr = mergeSort(arr.slice(0, middleIndex));
+          const rightArr = mergeSort(arr.slice(middleIndex, length));
+          arr = merge(leftArr, rightArr);
+        }
+
+        return arr;
+      }
+
+      function merge(leftArr, rightArr) {
+        let i = 0;
+        let j = 0;
+        const result = [];
+
+        while (i < leftArr.length && j < right.length) {
+          const item = leftArr[i] < right[j] ? leftArr[i++] : rightArr[j++];
+          // 依次push进小值
+          result.push(item);
+        }
+
+        // 留下的是大值，加在后面
+        const rest = i < leftArr.length ? leftArr.slice(i) : rightArr.slice(j);
+        return result.concat(rest);
+      }
+
+      // 快速排序
+      // 取基准，分为小值和大值，递归直到数组只剩一个元素，此时按顺序连接起来
+      function quickSort(arr) {
+        const { length } = arr;
+
+        if (length > 1) {
+          const base = arr[0];
+          const restArr = arr.slice(1);
+          const lessArr = restArr.filter((item) => item <= base);
+          const biggerArr = restArr.filter((item) => item > base);
+
+          arr = quickSort(lessArr).concat(base).concat(quickSort(biggerArr));
+        }
+
+        return arr;
+      }
+
+      // 计数排序
+      function countSort(arr) {
+        const { length } = arr;
+
+        if (length > 1) {
+          const max = Math.max(...arr);
+          // counts 的索引是 arr 的值，项是值出现的次数
+          const counts = new Array(max + 1);
+
+          arr.forEach((item) => {
+            if (!counts[item]) {
+              counts[item] = 0;
+            }
+            counts[item]++;
+          });
+
+          const newArr = [];
+          let sortIndex = 0;
+
+          // 按顺序将 counts 的索引排列起来，也就是 arr 的值
+          counts.forEach((item, index) => {
+            while (item > 0) {
+              newArr[sortIndex++] = index;
+              item--;
+            }
+          });
+
+          arr = newArr;
+        }
+
+        return arr;
+      }
+
+      // 桶排序
+      function bucketSort(arr, bucketSize) {
+        if (arr.length < 2) {
+          return arr;
+        } else {
+          // 创建若干桶，后面桶的值都比前面桶的值大
+          const buckets = createBucket(arr, bucketSize);
+
+          // 桶排序，合并
+          return sortBuckets(buckets);
+        }
+      }
+
+      function createBucket(arr, bucketSize) {
+        const min = Math.max(...arr);
+        const max = Math.max(...arr);
+
+        const bucketCount = Math.floor((max - min) / bucketSize + 1);
+        const buckets = [...Array(bucketCount)].map(() => []);
+
+        for (let i = 0; i < arr.length; i++) {
+          // 把数据放进对应的桶，但未排序
+          const index = Math.floor((arr[i] - min) / bucketSize);
+          buckets[index].push(arr[i]);
+        }
+
+        return buckets;
+      }
+
+      function sortBuckets(buckets) {
+        let sortArr = [];
+
+        for (let i = 0; i < buckets.length; i++) {
+          if (buckets[i]) {
+            // 小桶排序
+            insertSort(buckets[i]);
+            sortArr = sortArr.concat(...buckets[i]);
+          }
+        }
+
+        return sortArr;
+      }
+
+      // 基数排序
+      // 分为 0-9 共 10 个桶，按个位、十位、百位...的顺序分别进行不同轮的排序，然后合并
+      function radixSort(arr) {
+        const base = 10;
+        let divider = 1;
+        let max = Math.max(...arr);
+
+        while (divider <= max) {
+          const buckets = [...Arr(10)].map(() => []);
+
+          for (let val of arr) {
+            // 把数据放进对应的桶
+            const index = Math.floor(val / divider) % base;
+            buckets[index].push(val);
+          }
+
+          arr = [].concat(...buckets);
+          divider *= base;
+        }
+
+        return arr
+      }
+    </script>
+  </body>
+</html>
