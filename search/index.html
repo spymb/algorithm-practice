@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      function quickSort(arr) {
+        const { length } = arr;
+
+        if (length > 1) {
+          const base = arr[0];
+          const restArr = arr.slice(1);
+          const lessArr = restArr.filter((item) => item <= base);
+          const biggerArr = restArr.filter((item) => item > base);
+
+          arr = quickSort(lessArr).concat(base).concat(quickSort(biggerArr));
+        }
+
+        return arr;
+      }
+    </script>
+
+    <script>
+      // 二分搜索
+      function binarySearch(find, arr, start, end) {
+        start = start || 0;
+        end = end || arr.length - 1;
+
+        if (start <= end && find >= arr[start] && find <= arr[end]) {
+          if (find === arr[start]) {
+            return start;
+          }
+
+          if (find === arr[end]) {
+            return end;
+          }
+
+          let mid = Math.ceil((end + start) / 2);
+
+          if (find === arr[mid]) {
+            return mid;
+          } else if (find < arr[mid]) {
+            return binarySearch(find, arr, start, mid - 1);
+          } else {
+            return binarySearch(find, arr, mid + 1, end);
+          }
+        }
+      }
+
+      // 内插搜索
+      function insertSearch(find, arr, start, end) {
+        start = start || 0;
+        end = end || arr.length - 1;
+        arr = quickSort(arr);
+
+        if (start <= end && find >= arr[start] && find <= arr[end]) {
+          if (find === arr[start]) {
+            return start;
+          }
+
+          if (find === arr[end]) {
+            return end;
+          }
+
+          let mid =
+            start +
+            Math.floor(
+              ((find - arr[start]) / (arr[end] - arr[start])) * (end - start)
+            );
+
+          if (find === arr[mid]) {
+            return mid;
+          } else if (find < arr[mid]) {
+            return insertSearch(find, arr, start, mid - 1);
+          } else {
+            return insertSearch(find, arr, mid + 1, end);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
